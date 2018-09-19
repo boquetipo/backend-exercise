@@ -1,0 +1,8 @@
+<div class="paginator">
+    {%  if (page != '') and (page > 1) %}
+        <a href="/?q={{ app.request.get('q') }}&i={{ app.request.get('i') }}&p={{ page - 1 }}" class="but left"><< Prev</a>
+    {% endif %}
+    {%  if (recipes | length > 0) and (page != '') %}
+        <a href="/?q={{ app.request.get('q') }}&i={{ app.request.get('i') }}&p={{ page + 1 }}" class="but right">Next >></a>
+    {% endif %}
+</div>

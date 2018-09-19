@@ -1,0 +1,121 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello {{ controller_name }}!{% endblock %}
+
+{% block body %}
+<style>
+    body {
+        font-size: 12px;
+        font-family: Arial, Helvetica, sans-serif;
+        margin: 0 auto;
+        max-width: 800px;
+    }
+    .search {
+        text-align: center;
+        border-bottom: 1px solid #555;
+        padding-bottom: 10px;
+    }
+    .search ul{
+        list-style: none;
+    }
+    .search ul li{
+        display: inline-block;
+    }
+    .tit{
+        font-size: 16px;
+        font-weight: bold;
+
+    }
+    .customSearch {
+        text-align: center;
+        border-bottom: 1px solid #555;
+        padding: 10px;
+        margin-bottom: 10px;
+    }
+    .customSearch label,
+    .customSearch input{
+        display: block;
+    }
+    .customSearch input{
+        margin: 0 auto 10px auto;
+    }
+    .recipes {
+        list-style: none;
+        padding: 0;
+    }
+    .recipes .item{
+        margin: 5px auto;
+        padding: 5px;
+        border-bottom: 1px solid #777;
+    }
+    .recipes .item .tit{
+        color: #718C00;
+    }
+    .paginator {
+        border: 1px solid #999;
+        padding: 5px;
+        height: 20px;
+    }
+    .paginator .but{
+        text-decoration: none;
+        color: #555;
+    }
+    .paginator .left{
+        float:left;
+    }
+    .paginator .right{
+        float:right;
+    }
+</style>
+
+<div class="example-wrapper">
+    <div class="search">
+        <p class="tit">Predefined search</p>
+        <ul>
+            {% for item in search %}
+                <li class="{{ app.request.get('q') == item ? 'sel' : '' }}"><a href="/?q={{ item }}">{{ item }}</a></li>
+            {% endfor %}
+        </ul>
+    </div>
+    <div class="customSearch">
+        <form action="/" method="get">
+            <legend class="tit">Custom search</legend>
+            <div class="field">
+                <label for="q">Search</label>
+                <input type="text" name="q" />
+            </div>
+            <div class="field">
+                <label for="i">Ingredients<br />(separated by comma or space)</label>
+                <input type="text" name="i" />
+            </div>
+            <button type="submit">Search</button>
+        </form>
+    </div>
+    {% if (recipes | length > 0) %}
+        <p>Result:</p>
+        {% include 'recipe/paginator.html.twig' %}
+        <ul class="recipes">
+            {% for recipe in recipes %}
+                <li class="item">
+                    <a class="tit" href="{{ recipe.href }}" target="_blank">{{ recipe.title | e('html_attr') }}</a>
+                    {% if recipe.ingredients != '' %}
+                        <div class="ing">
+                            {{ recipe.ingredients }}
+                        </div>
+                    {% endif %}
+                    <div class="img">
+                        {% if recipe.thumbnail != '' %}
+                            <a href="{{ recipe.href }}" target="_blank"><img src="{{ recipe.thumbnail }}" alt="" /></a>
+                            {#{% else %}
+                                <a href="{{ recipe.href }}" target="_blank"><img src="{{ app.request.getBaseURL() }}/assets/img/default.png" alt="" /></a>#}
+                        {% endif %}
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No results</p>
+    {% endif %}
+    {% include 'recipe/paginator.html.twig' %}
+</div>
+{% endblock %}
